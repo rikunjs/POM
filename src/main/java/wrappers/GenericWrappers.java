@@ -157,6 +157,8 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 * @throws IOException 
 	 * @throws COSVisitorException 
 	 */
+	
+	//Enter the values using Name Locator
 	public void enterByName(String nameValue, String data) {
 		try {
 			driver.findElement(By.name(nameValue)).clear();
