@@ -139,10 +139,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			reportStep("The data: "+data+" entered successfully in field :"+idValue, "PASS");
 		} catch (NoSuchElementException e) {
 			reportStep("The data: "+data+" could not be entered in the field :"+idValue, "FAIL");
-		}catch (UnhandledAlertException e) {
-			enterById(idValue, data);
-//			reportStep("Unknown exception occured while entering "+data+" in the field :"+idValue, "FAIL");
-		} 
+		}
 		catch (Exception e) {
 			reportStep("Unknown exception occured while entering "+data+" in the field :"+idValue, "FAIL");
 		}
