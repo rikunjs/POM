@@ -7,42 +7,32 @@ import java.lang.reflect.Method;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 import com.relevantcodes.extentreports.ExtentTest;
 
 import wrappers.GenericWrappers;
-import wrappers.LeafTapsWrappers;
+import wrappers.LeaftapsWrappers;
 
-public class CallWrappersUsingKeyword extends LeafTapsWrappers{
+public class CallWrappersUsingKeyword extends LeaftapsWrappers{
 
-	@Parameters({"testCaseName","testDescription","browser","category","authors"})
-	@BeforeClass
-	public void setup(String testName, String testDesc, String browser, String group, String authorName){
-		
-		browserName 	= browser;
-		testCaseName 	= testName;
-		testDescription = testDesc;	
-		category 		= group;
-		authors 		= authorName;
+
+	public CallWrappersUsingKeyword(RemoteWebDriver driver, ExtentTest test) {
+		this.driver = driver;
+		this.test = test;
 	}
-	
-	@Parameters({"testCaseName"})
-	@Test
+
 	public void getAndCallKeyword(String fileName) throws Exception{
-		FileInputStream file = new FileInputStream(new File("./keywords/"+fileName+".xlsx" ));
+		FileInputStream file = new FileInputStream(new File(fileName));
 
 		// Create Workbook instance holding reference to .xlsx file
 		XSSFWorkbook workbook = new XSSFWorkbook(file);
 
 		Class<GenericWrappers> wrapper = GenericWrappers.class;
 
-		// Pass the argument - driver and test
+		// Create an instance with 2 arguments
 		Constructor<?> cons = wrapper.getConstructor(RemoteWebDriver.class,ExtentTest.class);
-	    Object wM = cons.newInstance(driver,test);
-	    
+		Object wM = cons.newInstance(driver,test);
+
 		// Get first/desired sheet from the workbook
 		XSSFSheet sh = workbook.getSheetAt(0);
 		for (int i = 1; i <= sh.getLastRowNum(); i++) {
@@ -58,25 +48,29 @@ public class CallWrappersUsingKeyword extends LeafTapsWrappers{
 				// ignore
 			}
 			
+			// Only method of declaration
 			Method[] methodName = wrapper.getDeclaredMethods();
+
 			for (Method method : methodName) {
-				
-				if(method.getName().equalsIgnoreCase(keyword.toLowerCase())){
+
+				if(method.getName().toLowerCase().equals(keyword.toLowerCase())){
 					if(locator.equals("") && data.equals(""))
-							method.invoke(wM);
+						method.invoke(wM);
 					else if(locator.equals(""))
-							method.invoke(wM,data);
+						method.invoke(wM,data);
 					else if(data.equals(""))
 						method.invoke(wM,locator);
 					else
-						method.invoke(wM,locator,data);					
+						method.invoke(wM,locator,data);
+
+					// go out of for Loop as you found the method of interest
 					break;
 
 				}				
 			}		
-			
+
 			workbook.close();
 		}
-		
+
 	}
 }

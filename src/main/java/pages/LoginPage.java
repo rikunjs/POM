@@ -3,50 +3,74 @@ package pages;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.relevantcodes.extentreports.ExtentTest;
+import wrappers.LeaftapsWrappers;
 
-import wrappers.LeafTapsWrappers;
+public class LoginPage extends LeaftapsWrappers{
 
-public class LoginPage extends LeafTapsWrappers  {
-
-	// This is to confirm you are in Login Page
-	public LoginPage(RemoteWebDriver driver, ExtentTest test){
-		this.driver = driver;
+	public LoginPage(RemoteWebDriver driver,ExtentTest test){
+		this.driver = driver; 
 		this.test = test;
-
-		if(!verifyTitle("Opentaps Open Source ERP + CRM")){
+		if(!verifyTitle("Opentaps Open Source ERP + CRM"))
 			reportStep("This is not Login Page", "FAIL");
-		}
+
 	}
-	
-	// Enter user name in Login Page
-	public LoginPage enterUserName(String userName){
-		enterById(prop.getProperty("Login.UserName.Id"), userName);
+	//This is the enter username
+	public LoginPage enterUserName(String data) {
+		enterById("username", data);
+		return this;
+
+	}
+	//This is the enter password
+	public LoginPage enterPassword(String data) {
+		enterById("password", data);
 		return this;
 	}
-	
-	// Enter password in Login Page
-	public LoginPage enterPassword(String password){
-		enterById(prop.getProperty("Login.Password.Id"), password);
+	//This is the click login
+	public HomePage clickLogin() {
+		clickByClassName("decorativeSubmit");
+		return new HomePage(driver,test);		
+	}
+	//This is the click login for failure
+	public LoginPage clickLoginForFailure() {
+		clickByClassName("decorativeSubmit");
 		return this;
 		
 	}
 	
-	// Click login 
-	public HomePage clickLogin(){
-		clickByClassName(prop.getProperty("Login.LoginButton.Class"));
-		return new HomePage(driver, test);
+	public LoginPage verifyErrorMessage(String data) {		
+		verifyTextContainsByXpath("//*[@id='errorDiv']", data);		
+		return this;		
 	}
 	
-	// Click login button on negative case
-	public LoginPage clickLoginForFailure(){
-		clickByClassName(prop.getProperty("Login.LoginButton.Class"));
-		return this;
+	public HomePage login(String userName, String password){
+		return enterUserName(userName).enterPassword(password).clickLogin();
 	}
 	
-	// Verify the error message
-	public LoginPage verifyErrorMsg(String text){
-		verifyTextContainsById(prop.getProperty("Login.Error.Id"), text);
-		return this;
-	}
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
+
+
+
+
+

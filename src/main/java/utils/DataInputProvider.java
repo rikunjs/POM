@@ -8,13 +8,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class DataInputProvider{
 
-	@SuppressWarnings("deprecation")
-	public static String[][] getAllSheetData(String sheetName) {
+	public static String[][] getSheet(String dataSheetName) {
 
 		String[][] data = null;
 
 		try {
-			FileInputStream fis = new FileInputStream(new File(sheetName));
+			FileInputStream fis = new FileInputStream(new File("./data/"+dataSheetName+".xlsx"));
 			XSSFWorkbook workbook = new XSSFWorkbook(fis);
 			XSSFSheet sheet = workbook.getSheetAt(0);	
 
@@ -34,11 +33,7 @@ public class DataInputProvider{
 						try {
 							String cellValue = "";
 							try{
-								if(row.getCell(j).getCellType() == 1)
-									cellValue = row.getCell(j).getStringCellValue();
-								else if(row.getCell(j).getCellType() == 0)
-									cellValue = ""+row.getCell(j).getNumericCellValue();
-
+								cellValue = row.getCell(j).getStringCellValue();
 							}catch(NullPointerException e){
 
 							}
@@ -61,6 +56,16 @@ public class DataInputProvider{
 
 		return data;
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}

@@ -11,43 +11,36 @@ public abstract class Reporter {
 	public static ExtentReports extent;
 	public String testCaseName, testDescription, category, authors;
 
-	public void reportStep(String desc, String status, boolean bSnap) {
+	
+	public void reportStep(String desc, String status) {
 
-		if(bSnap || !status.equalsIgnoreCase("INFO")){
-			long snapNumber = 100000l;
-			
-			try {
-				snapNumber= takeSnap();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			desc = desc+test.
-					addScreenCapture("./../reports/images/"+snapNumber+".jpg");
+		long snapNumber = 100000l;
+		
+		try {
+			snapNumber= takeSnap();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		// Write if it is successful or failure or information
-		if(status.equalsIgnoreCase("PASS")){
-			test.log(LogStatus.PASS, desc);
-		}else if(status.equalsIgnoreCase("FAIL")){
-			test.log(LogStatus.FAIL, desc);
+		if(status.toUpperCase().equals("PASS")){
+			test.log(LogStatus.PASS, desc+test.
+					addScreenCapture("./../reports/images/"+snapNumber+".jpg"));
+		}else if(status.toUpperCase().equals("FAIL")){
+			test.log(LogStatus.FAIL, desc+test.addScreenCapture("./../reports/images/"+snapNumber+".jpg"));
 			throw new RuntimeException("FAILED");
-		}else if(status.equalsIgnoreCase("WARN")){
-			test.log(LogStatus.FAIL, desc);
-		}else if(status.equalsIgnoreCase("INFO")){
+		}else if(status.toUpperCase().equals("INFO")){
 			test.log(LogStatus.INFO, desc);
+		}else if(status.toUpperCase().equals("WARN")){
+			test.log(LogStatus.WARNING, desc+test.addScreenCapture("./../reports/images/"+snapNumber+".jpg"));
 		}
-	
-	}
-	
-	public void reportStep(String desc, String status) {
-		reportStep(desc, status, true);
 	}
 
 	public abstract long takeSnap();
 	
 
 	public ExtentReports startResult(){
-		extent = new ExtentReports("./reports/report.html", false);
+		extent = new ExtentReports("./reports/result.html", false);
 		extent.loadConfig(new File("./src/main/resources/extent-config.xml"));
 		return extent;
 	}

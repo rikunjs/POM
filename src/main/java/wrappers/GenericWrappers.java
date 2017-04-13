@@ -15,6 +15,7 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -22,17 +23,23 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.relevantcodes.extentreports.ExtentTest;
 
 import utils.Reporter;
 
 public class GenericWrappers extends Reporter implements Wrappers {
+	
+	public GenericWrappers(RemoteWebDriver driver, ExtentTest test) {
+        this.driver = driver;
+        this.test=test;
+   }
 
 	public RemoteWebDriver driver;
 	protected static Properties prop;
 	public String sUrl,primaryWindowHandle,sHubUrl,sHubPort;
-	
+
 	public GenericWrappers() {
 		Properties prop = new Properties();
 		try {
@@ -47,19 +54,15 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		}
 	}
 
-	public GenericWrappers(RemoteWebDriver driver, ExtentTest test) {
-		this.driver = driver;
-		this.test=test;
-	}
-
-
 	public void loadObjects() {
 		prop = new Properties();
 		try {
 			prop.load(new FileInputStream(new File("./src/main/resources/object.properties")));
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -127,6 +130,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 * @param data - The data to be sent to the webelement
 	 * @author Babu - TestLeaf
 	 * @throws IOException 
+	 * @throws COSVisitorException 
 	 */
 	public void enterById(String idValue, String data) {
 		try {
@@ -135,7 +139,11 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			reportStep("The data: "+data+" entered successfully in field :"+idValue, "PASS");
 		} catch (NoSuchElementException e) {
 			reportStep("The data: "+data+" could not be entered in the field :"+idValue, "FAIL");
-		} catch (Exception e) {
+		}catch (UnhandledAlertException e) {
+			enterById(idValue, data);
+//			reportStep("Unknown exception occured while entering "+data+" in the field :"+idValue, "FAIL");
+		} 
+		catch (Exception e) {
 			reportStep("Unknown exception occured while entering "+data+" in the field :"+idValue, "FAIL");
 		}
 	}
@@ -147,6 +155,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 * @param data - The data to be sent to the webelement
 	 * @author Babu - TestLeaf
 	 * @throws IOException 
+	 * @throws COSVisitorException 
 	 */
 	public void enterByName(String nameValue, String data) {
 		try {
@@ -169,7 +178,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 * @param data - The data to be sent to the webelement
 	 * @author Babu - TestLeaf
 	 * @throws IOException 
-
+	 * @throws COSVisitorException 
 	 */
 	public void enterByXpath(String xpathValue, String data) {
 		try {
@@ -197,7 +206,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 				reportStep("The title of the page matches with the value :"+title, "PASS");
 				bReturn = true;
 			}else
-				System.out.println();
 				reportStep("The title of the page:"+driver.getTitle()+" did not match with the value :"+title, "SUCCESS");
 
 		}catch (Exception e) {
@@ -286,21 +294,13 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 * This method will close all the browsers
 	 * @author Babu - TestLeaf
 	 */
-	public void closeAllBrowsers() {
+	public void quitBrowser() {
 		try {
 			driver.quit();
 		} catch (Exception e) {
-			reportStep("The browser could not be closed.", "WARN");
+			reportStep("The browser:"+driver.getCapabilities().getBrowserName()+" could not be closed.", "FAIL");
 		}
 
-	}
-	
-	public void closeBrowser() {
-		try {
-			driver.close();
-		} catch (Exception e) {
-			reportStep("The browser could not be closed.", "WARN");
-		}
 	}
 
 	/**
@@ -310,6 +310,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 */
 	public void clickById(String id) {
 		try{
+			 
 			driver.findElement(By.id(id)).click();
 			reportStep("The element with id: "+id+" is clicked.", "PASS");
 
@@ -331,7 +332,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			reportStep("The element with class Name: "+classVal+" could not be clicked.", "FAIL");
 		}
 	}
-
 	/**
 	 * This method will click the element using name as locator
 	 * @param name  The name (locator) of the element to be clicked
@@ -354,7 +354,16 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	public void clickByLink(String name) {
 		try{
 			driver.findElement(By.linkText(name)).click();
-			reportStep("The element with link name: "+name+" is clicked.", "PASS");
+			//reportStep("The element with link name: "+name+" is clicked.", "PASS");
+		} catch (Exception e) {
+			reportStep("The element with link name: "+name+" could not be clicked.", "FAIL");
+		}
+	}
+	
+	public void clickByLinkNoSnap(String name) {
+		try{
+			driver.findElement(By.linkText(name)).click();
+			//reportStep("The element with link name: "+name+" is clicked.", "PASS");
 		} catch (Exception e) {
 			reportStep("The element with link name: "+name+" could not be clicked.", "FAIL");
 		}
@@ -368,29 +377,19 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	public void clickByXpath(String xpathVal) {
 		try{
 			driver.findElement(By.xpath(xpathVal)).click();
-			reportStep("The element : "+xpathVal+" is clicked.", "PASS");
+			//reportStep("The element : "+xpathVal+" is clicked.", "PASS");
 		} catch (Exception e) {
 			reportStep("The element with xpath: "+xpathVal+" could not be clicked.", "FAIL");
 		}
-	}
-
-	public void clickByLinkNoSnap(String name) {
-		try{
-			driver.findElement(By.linkText(name)).click();
-			reportStep("The element with link name: "+name+" is clicked.", "PASS",false);
-		} catch (Exception e) {
-			reportStep("The element with link name: "+name+" could not be clicked.", "FAIL");
-		}
-
 	}
 
 	public void clickByXpathNoSnap(String xpathVal) {
 		try{
 			driver.findElement(By.xpath(xpathVal)).click();
-			reportStep("The element : "+xpathVal+" is clicked.", "PASS",false);
+			//reportStep("The element : "+xpathVal+" is clicked.", "PASS");
 		} catch (Exception e) {
 			reportStep("The element with xpath: "+xpathVal+" could not be clicked.", "FAIL");
-		}		
+		}
 	}
 
 	/**
@@ -451,6 +450,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		return bReturn; 
 	}
 
+
 	/**
 	 * This method will select the drop down value using id as locator
 	 * @param id The id (locator) of the drop down element
@@ -467,6 +467,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	}
 
 
+
 	public void selectVisibileTextByXPath(String xpath, String value) {
 		try{
 			new Select(driver.findElement(By.xpath(xpath))).selectByVisibleText(value);;
@@ -476,19 +477,15 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		}
 	}
 
-	public void selectIndexById(String id, int value) {
+	public void selectIndexById(String id, String value) {
 		try{
-			new Select(driver.findElement(By.id(id))).selectByIndex(value);
+			new Select(driver.findElement(By.id(id))).selectByIndex(Integer.parseInt(value));;
 			reportStep("The element with id: "+id+" is selected with index :"+value, "PASS");
 		} catch (Exception e) {
 			reportStep("The index: "+value+" could not be selected.", "FAIL");
 		}
 	}
 
-	/**
-	 * This method will switch to the parent Window
-	 * @author Babu - TestLeaf
-	 */
 	public void switchToParentWindow() {
 		try {
 			Set<String> winHandles = driver.getWindowHandles();
@@ -501,10 +498,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		}
 	}
 
-	/**
-	 * This method will move the control to the last window
-	 * @author Babu - TestLeaf
-	 */
 	public void switchToLastWindow() {
 		try {
 			Set<String> winHandles = driver.getWindowHandles();
@@ -516,11 +509,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		}
 	}
 
-
-	/**
-	 * This method will accept the alert opened
-	 * @author Babu - TestLeaf
-	 */
 	public void acceptAlert() {
 		try {
 			driver.switchTo().alert().accept();
@@ -531,11 +519,8 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		}
 
 	}
+	
 
-	/**
-	 * This method will return the text of the alert
-	 * @author Babu - TestLeaf
-	 */
 	public String getAlertText() {		
 		String text = null;
 		try {
@@ -549,10 +534,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	}
 
-	/**
-	 * This method will dismiss the alert opened
-	 * @author Babu - TestLeaf
-	 */
 	public void dismissAlert() {
 		try {
 			driver.switchTo().alert().dismiss();
@@ -564,11 +545,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	}
 
-	
-	/**
-	 * This method will take snapshot of the browser
-	 * @author Babu - TestLeaf
-	 */
 	public long takeSnap(){
 		long number = (long) Math.floor(Math.random() * 900000000L) + 10000000L; 
 		try {
