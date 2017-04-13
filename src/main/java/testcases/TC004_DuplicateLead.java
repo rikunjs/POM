@@ -5,9 +5,9 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import pages.LoginPage;
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class TC004_DuplicateLead extends LeaftapsWrappers {
+public class TC004_DuplicateLead extends LeafTapsWrappers {
 
 	@BeforeClass
 	public void setValues() {

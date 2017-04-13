@@ -9,9 +9,9 @@ import pages.LoginPage;
 import pages.MyLeadsPage;
 import pages.FindMergeLeadPage;
 import pages.MergeLeadPage;
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class TC003_MergeLead extends LeaftapsWrappers {
+public class TC003_MergeLead extends LeafTapsWrappers {
 
 	@BeforeClass
 	public void setValues() {

@@ -13,7 +13,9 @@ import utils.DataInputProvider;
 public class LeafTapsWrappers extends GenericWrappers {
 	
 	public String browserName;
-	public String dataSheetName;	
+	public String dataSheetName;
+	
+	
 
 	@BeforeSuite
 	public void beforeSuite(){
@@ -46,12 +48,13 @@ public class LeafTapsWrappers extends GenericWrappers {
 	@AfterMethod
 	public void afterMethod(){
 		endTestcase();
-		closeAllBrowsers();		
+		quitBrowser();
+		
 	}
 	
 	@DataProvider(name="fetchData")
 	public Object[][] getData(){
-		return DataInputProvider.getAllSheetData("./data/"+dataSheetName+".xlsx");		
+		return DataInputProvider.getSheet(dataSheetName);		
 	}	
 	
 	

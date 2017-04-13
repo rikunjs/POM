@@ -2,8 +2,8 @@ package pages;
 import pages.MergeLeadPage;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import com.relevantcodes.extentreports.ExtentTest;
-import wrappers.LeaftapsWrappers;
-public class FindMergeLeadPage extends LeaftapsWrappers {
+import wrappers.LeafTapsWrappers;
+public class FindMergeLeadPage extends LeafTapsWrappers {
 
 	public FindMergeLeadPage(RemoteWebDriver driver, ExtentTest test) throws InterruptedException{
 		this.driver = driver; 

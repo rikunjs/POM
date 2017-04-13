@@ -8,9 +8,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class RunKeywordScripts extends LeaftapsWrappers{
+public class RunKeywordScripts extends LeafTapsWrappers{
 
 	@BeforeClass
 	public void setup(){

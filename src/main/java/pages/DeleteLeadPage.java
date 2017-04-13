@@ -4,9 +4,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.relevantcodes.extentreports.ExtentTest;
 
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class DeleteLeadPage extends LeaftapsWrappers {
+public class DeleteLeadPage extends LeafTapsWrappers {
 
 	public DeleteLeadPage(RemoteWebDriver driver, ExtentTest test){
 		this.driver = driver; 

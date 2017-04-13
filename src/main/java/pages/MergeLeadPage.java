@@ -4,9 +4,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.relevantcodes.extentreports.ExtentTest;
 
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class MergeLeadPage extends LeaftapsWrappers {
+public class MergeLeadPage extends LeafTapsWrappers {
 	public MergeLeadPage(RemoteWebDriver driver, ExtentTest test) throws InterruptedException{
 		this.driver = driver; 
 		this.test = test;

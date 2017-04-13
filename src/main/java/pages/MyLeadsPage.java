@@ -4,9 +4,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.relevantcodes.extentreports.ExtentTest;
 
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class MyLeadsPage extends LeaftapsWrappers {
+public class MyLeadsPage extends LeafTapsWrappers {
 
 	public MyLeadsPage(RemoteWebDriver driver, ExtentTest test){
 		this.driver = driver; 

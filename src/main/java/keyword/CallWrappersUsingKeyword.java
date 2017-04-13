@@ -11,9 +11,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import com.relevantcodes.extentreports.ExtentTest;
 
 import wrappers.GenericWrappers;
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class CallWrappersUsingKeyword extends LeaftapsWrappers{
+public class CallWrappersUsingKeyword extends LeafTapsWrappers{
 
 
 	public CallWrappersUsingKeyword(RemoteWebDriver driver, ExtentTest test) {

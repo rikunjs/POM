@@ -3,9 +3,9 @@ package pages;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.relevantcodes.extentreports.ExtentTest;
-import wrappers.LeaftapsWrappers;
+import wrappers.LeafTapsWrappers;
 
-public class LoginPage extends LeaftapsWrappers{
+public class LoginPage extends LeafTapsWrappers{
 
 	public LoginPage(RemoteWebDriver driver,ExtentTest test){
 		this.driver = driver; 
